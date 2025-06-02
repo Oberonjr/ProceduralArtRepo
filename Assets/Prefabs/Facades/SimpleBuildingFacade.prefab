@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2548675949173781992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4958248321040069582}
+  - component: {fileID: 3312212173233987023}
+  - component: {fileID: 810810879049829847}
+  m_Layer: 0
+  m_Name: SimpleBuildingFacade
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4958248321040069582
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548675949173781992}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3312212173233987023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548675949173781992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8baa322500d5e0f4bb03c61e51681fd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildDelay: 0.1
+  HeightRemaining: 7
+  Width: 5
+  DoorHaver: 0
+  isFirst: 1
+  localPattern: 
+  slanted: 0
+--- !u!114 &810810879049829847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548675949173781992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4856b5472f4cfc45a42d328fa0a8e76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slantedRoof: 1
+  wallStyle:
+  - FloorType: 3
+    WallStyle:
+    - {fileID: 8844148322578638478, guid: 3eb0a66e397ee29448679526fb43cc1c, type: 3}
+  - FloorType: 1
+    WallStyle:
+    - {fileID: 3971340859717223806, guid: ab62343c1502c2f449e8c87cc77a5b31, type: 3}
+  - FloorType: 0
+    WallStyle:
+    - {fileID: 8558048331132397842, guid: ac8112cc40c0a29429334b448269b073, type: 3}
+    - {fileID: 8844148322578638478, guid: 3eb0a66e397ee29448679526fb43cc1c, type: 3}
+  - FloorType: 5
+    WallStyle:
+    - {fileID: 8365252198909404791, guid: 419a224b8344e4b47ac377b4da068994, type: 3}
+  wallPattern: 
+  hasFloor: 1
+  groundFloor:
+    FloorType: 0
+    WallStyle:
+    - {fileID: 8558048331132397842, guid: ac8112cc40c0a29429334b448269b073, type: 3}
+    - {fileID: 8844148322578638478, guid: 3eb0a66e397ee29448679526fb43cc1c, type: 3}
+  hasRoof: 1
+  roofFloor:
+    FloorType: 5
+    WallStyle:
+    - {fileID: 8365252198909404791, guid: 419a224b8344e4b47ac377b4da068994, type: 3}

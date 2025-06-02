@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 78d6b56a823b48c4b84358f1a4c07126
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 214996
+  packageName: Substance Designer Shader for URP - With Displacement
+  packageVersion: 1.0
+  assetPath: Assets/URP Shader/DemoScene/Prefabs/DemoPlane.prefab
+  uploadId: 484244
