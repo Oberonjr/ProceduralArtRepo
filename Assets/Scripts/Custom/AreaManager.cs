@@ -183,7 +183,7 @@ public class AreaManager : MonoBehaviour
         bool[,] visited = new bool[gridSize.x, gridSize.y];
         foreach (Location loc in preplacedLocations)
         {
-            _gridManager.SetNodesUnderLoc(loc);
+            _gridManager.SnapLocToGrid(loc);
             foreach (Node n in loc.coveredNodes)
             {
                 Vector2Int globalIndex = _gridManager.GetNodeIndex(n);
@@ -199,6 +199,13 @@ public class AreaManager : MonoBehaviour
             {
                 if(_gridManager.occupied[x, y] || visited[x, y]) continue;
                 Vector2Int areaSize = FindValidArea(new Vector2Int(x, y), visited);
+                Vector3 areaRawSize = new Vector3(areaSize.x * nodeSize, 0, areaSize.y * nodeSize);
+                Vector3 minRawArea = new Vector3(4, 0, 4);
+                if (areaRawSize.x <= minRawArea.x || areaRawSize.z <= minRawArea.z)
+                {
+                    //If anything's raw area is too small, just don't generate anything at all
+                    continue;
+                }
                 if(areaSize == Vector2Int.zero)
                 {
                     //If anything should be out in areas that are too small, determine that here
@@ -217,6 +224,7 @@ public class AreaManager : MonoBehaviour
                 }
                 Vector3 center = _gridManager.GetNodeWorldPosition(_gridManager.grid[x,y]) +
                                  new Vector3(areaSize.x * nodeSize, 0, areaSize.y * nodeSize) * 0.5f;
+                
                 Location loc = new Location();
                 loc.Initialize(AreaType.StandardBlock, 
                     center, 
@@ -233,6 +241,9 @@ public class AreaManager : MonoBehaviour
         GridManager gm = _gridManager;
         int maxW = Mathf.Min(maxAreaSize.x, gm.gridSize.x - startCoords.x);
         int maxH = Mathf.Min(maxAreaSize.y, gm.gridSize.y - startCoords.y);
+
+        maxW = Mathf.Min(maxW, 30);
+        maxH = Mathf.Min(maxH, 30);
 
         List<Vector2Int> validSizes = new List<Vector2Int>();
         
@@ -294,14 +305,25 @@ public class AreaManager : MonoBehaviour
             Vector3 end = gm.GetNodeWorldPosition(gm.grid[line[line.Count - 1].x, line[line.Count - 1].y]);
 
             Vector3 center = (start + end) * 0.5f;
-            Vector3 size = new Vector3(
-                Mathf.Abs(end.x - start.x),
-                0,
-                Mathf.Abs(end.z - start.z)
-            );
+            float width;
+            float depth;
+
+            if (Mathf.Abs(end.x - start.x) > Mathf.Abs(end.z - start.z))
+            {
+                width = end.x - start.x;
+                depth = nodeSize * 0.9f;
+            }
+            else
+            {
+                width = nodeSize * 0.9f;
+                depth = end.z - start.z;
+            }
+
+            Vector3 size = new Vector3(width, 0.1f, depth);
 
             Location roadLoc = new Location();
             roadLoc.Initialize(AreaType.Road, center, size);
+            _gridManager.SetNodesUnderLoc(roadLoc);
             roadLocations.Add(roadLoc);
         }
 
@@ -374,8 +396,11 @@ public class AreaManager : MonoBehaviour
         #if UNITY_EDITOR
         _gridManager = FindObjectOfType<GridManager>();
         #endif
-        _gridManager.LiberateGridOverLocations(generatedLocations);
-        _gridManager.LiberateGridOverLocations(roadLocations);
+        if (_gridManager.grid != null)
+        {
+            _gridManager.LiberateGridOverLocations(generatedLocations);
+            _gridManager.LiberateGridOverLocations(roadLocations);
+        }
         generatedLocations.Clear();
         roadLocations.Clear();
     }

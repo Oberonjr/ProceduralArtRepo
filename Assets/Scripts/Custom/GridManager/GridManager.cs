@@ -113,6 +113,7 @@ public class GridManager : MonoBehaviour
         _areaManager = FindObjectOfType<AreaManager>();
         _generationManager = FindObjectOfType<GenerationManager>();
 #endif
+        LiberateGrid();
         _areaManager.ClearAllGeneratedAreas();
         _generationManager.DestroyCity();
         grid = new Node[gridSize.x, gridSize.y];
@@ -182,11 +183,11 @@ public class GridManager : MonoBehaviour
     //Area tooling
     public void SnapLocToGrid(Location loc)
     {
-        SetNodesUnderLoc(loc);
+        Dictionary<Vector2Int, Node> nodesUnderLoc = GetNodesUnderLoc(loc);
         List<Node> touchedNodes = new List<Node>();
-        foreach (Node n in loc.coveredNodes)
+        foreach (KeyValuePair<Vector2Int, Node> n in nodesUnderLoc)
         {
-            touchedNodes.Add(n);
+            touchedNodes.Add(n.Value);
         }
         if (touchedNodes.Count == 0) return;
         if (loc.locationType == AreaType.Road && IsOnGridEdge(touchedNodes)) return;
@@ -209,14 +210,15 @@ public class GridManager : MonoBehaviour
         minZ -= nodeSize * 0.5f;
         maxZ += nodeSize * 0.5f;
 
-        float width = Mathf.Clamp(maxX - minX, 4, 30);
-        float depth = Mathf.Clamp(maxZ - minZ, 4, 30);
+        float width = Mathf.Clamp(maxX - minX, 0, 30);
+        float depth = Mathf.Clamp(maxZ - minZ, 0, 30);
 
         float centerX = (minX + maxX) * 0.5f;
         float centerZ = (minZ + maxZ) * 0.5f;
 
         loc.position = new Vector3(centerX, loc.position.y, centerZ);
         loc.size = new Vector3(width * 0.99f, loc.size.y, depth * 0.99f);
+        SetNodesUnderLoc(loc, GetNodesUnderLoc(loc));
     }
 
 
@@ -227,43 +229,39 @@ public class GridManager : MonoBehaviour
             SnapLocToGrid(l);
         }
     }
-    
-    public void SetNodesUnderLoc(Location loc)
+
+    public Dictionary<Vector2Int, Node> GetNodesUnderLoc(Location loc)
     {
-        if(grid == null) return;
+        if(grid == null) return null;
         Bounds locBounds = new Bounds(loc.position, loc.size);
         
         Node leftBottom = GetClosestNode(loc.position - (loc.size / 2));
         Vector2Int bLIndex = GetNodeIndex(leftBottom);
         
         Dictionary<Vector2Int, Node> localNodeMap = new Dictionary<Vector2Int, Node>();
-        
+
         foreach (Node n in grid)
         {
-            if(n.type == NodeType.ROAD && loc.locationType != AreaType.Road) continue;
+            if (n.type == NodeType.ROAD && loc.locationType != AreaType.Road) continue;
             Vector3 nodeWorldPos = GetNodeWorldPosition(n, loc.position.y);
             Vector3 nodeSizeVec = new Vector3(nodeSize, 1, nodeSize);
             Bounds nodeBounds = new Bounds(nodeWorldPos, nodeSizeVec);
             if (!nodeBounds.Intersects(locBounds)) continue;
-            
+
             Vector2Int nodeIndex = GetNodeIndex(n);
             Vector2Int localIndex = new Vector2Int(
                 nodeIndex.x - bLIndex.x,
                 nodeIndex.y - bLIndex.y
             );
             localNodeMap[localIndex] = n;
-
-            if (nodeIndex.x >= 0 && nodeIndex.x < occupied.GetLength(0) &&
-                nodeIndex.y >= 0 && nodeIndex.y < occupied.GetLength(1))
-            {
-                occupied[nodeIndex.x, nodeIndex.y] = true;
-                grid[nodeIndex.x, nodeIndex.y].occupied = true;
-            }
-                
-            
         }
-        
-        
+        return localNodeMap;
+    }
+    
+    public void SetNodesUnderLoc(Location loc, Dictionary<Vector2Int, Node> localNodeMap = null)
+    {
+        if(grid == null) return;
+        if(localNodeMap == null) localNodeMap = GetNodesUnderLoc(loc);
         int width = localNodeMap.Keys.Max(k => k.x) + 1;
         int depth = localNodeMap.Keys.Max(k => k.y) + 1;
 
@@ -271,6 +269,14 @@ public class GridManager : MonoBehaviour
         foreach (KeyValuePair<Vector2Int, Node> kvp in localNodeMap)
         {
             loc.coveredNodes[kvp.Key.x, kvp.Key.y] = kvp.Value;
+            
+            Vector2Int nodeIndex = GetNodeIndex(kvp.Value);
+            if (nodeIndex.x >= 0 && nodeIndex.x < occupied.GetLength(0) &&
+                nodeIndex.y >= 0 && nodeIndex.y < occupied.GetLength(1))
+            {
+                occupied[nodeIndex.x, nodeIndex.y] = true;
+                grid[nodeIndex.x, nodeIndex.y].occupied = true;
+            }
         }
     }
 
@@ -289,6 +295,10 @@ public class GridManager : MonoBehaviour
     
     public void LiberateGridUnderLoc(Location loc)
     {
+        if (loc.coveredNodes == null || loc.coveredNodes.Length == 0)
+        {
+            SetNodesUnderLoc(loc);
+        }
         foreach (Node n in loc.coveredNodes)
         {
             Vector2Int nodeIndex = GetNodeIndex(n);
