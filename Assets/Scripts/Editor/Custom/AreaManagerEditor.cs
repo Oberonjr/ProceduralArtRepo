@@ -11,6 +11,10 @@ public class AreaManagerEditor : Editor
     {
         AreaManager areaManager = (AreaManager)target;
         GUILayout.Label("Area Manager", EditorStyles.boldLabel);
+        if (GUILayout.Button("Handle Preplaced Locations"))
+        {
+            areaManager.HandlePreplacedLocations();
+        }
         if (GUILayout.Button("Generate Areas"))
         {
             areaManager.GenerateNewAreas();

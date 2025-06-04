@@ -187,7 +187,8 @@ public class GridManager : MonoBehaviour
         List<Node> touchedNodes = new List<Node>();
         foreach (KeyValuePair<Vector2Int, Node> n in nodesUnderLoc)
         {
-            touchedNodes.Add(n.Value);
+            if(!n.Value.occupied)
+                touchedNodes.Add(n.Value);
         }
         if (touchedNodes.Count == 0) return;
         if (loc.locationType == AreaType.Road && IsOnGridEdge(touchedNodes)) return;

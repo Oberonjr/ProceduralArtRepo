@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public enum AreaType{
@@ -148,6 +149,7 @@ public class AreaManager : MonoBehaviour
     #endregion
     
     private GridManager _gridManager;
+    private bool[,] visited = null;
     void Awake()
     {
         if (_instance == null)
@@ -179,20 +181,12 @@ public class AreaManager : MonoBehaviour
         _gridManager.ResetGrid();
         Vector2Int gridSize = _gridManager.gridSize;
         int nodeSize = _gridManager.nodeSize;
-        
-        bool[,] visited = new bool[gridSize.x, gridSize.y];
-        foreach (Location loc in preplacedLocations)
+        if (visited == null)
         {
-            _gridManager.SnapLocToGrid(loc);
-            foreach (Node n in loc.coveredNodes)
-            {
-                Vector2Int globalIndex = _gridManager.GetNodeIndex(n);
-                visited[globalIndex.x, globalIndex.y] = true;
-            }
-            Vector2Int bottomLeft = new Vector2Int((int)loc.position.x, (int)loc.position.y);
-            Vector2Int dimensions = new Vector2Int(loc.Width, loc.Depth);
-            GenerateRoadBelt(bottomLeft, dimensions, nodeSize);
+            visited = new bool[gridSize.x, gridSize.y];
         }
+        
+        HandlePreplacedLocations();
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)
@@ -236,6 +230,32 @@ public class AreaManager : MonoBehaviour
         
     }
 
+    public void HandlePreplacedLocations()
+    {
+#if UNITY_EDITOR
+        _gridManager = FindObjectOfType<GridManager>();
+#endif
+        int nodeSize = _gridManager.nodeSize;
+        Vector2Int gridSize = _gridManager.gridSize;
+        if (visited == null)
+        {
+            visited = new bool[gridSize.x, gridSize.y];
+        }
+        foreach (Location loc in preplacedLocations)
+        {
+            _gridManager.SnapLocToGrid(loc);
+            foreach (Node n in loc.coveredNodes)
+            {
+                Vector2Int globalIndex = _gridManager.GetNodeIndex(n);
+                visited[globalIndex.x, globalIndex.y] = true;
+                n.occupied = true;
+            }
+            Vector2Int bottomLeft = _gridManager.GetNodeIndex(loc.bottomLeft);
+            Vector2Int dimensions = new Vector2Int(loc.Width, loc.Depth);
+            GenerateRoadBelt(bottomLeft, dimensions, nodeSize);
+        }
+    }
+    
     Vector2Int FindValidArea(Vector2Int startCoords, bool[,] visited)
     {
         GridManager gm = _gridManager;
@@ -389,6 +409,13 @@ public class AreaManager : MonoBehaviour
         preplacedLocations.Clear();
         generatedLocations.Clear();
         roadLocations.Clear();
+        for (int i = 0; i < visited.GetLength(0); i++)
+        {
+            for (int j = 0; j < visited.GetLength(1); j++)
+            {
+                visited[i, j] = false;
+            }
+        }
     }
     
     public void ClearAllGeneratedAreas()
@@ -401,8 +428,35 @@ public class AreaManager : MonoBehaviour
             _gridManager.LiberateGridOverLocations(generatedLocations);
             _gridManager.LiberateGridOverLocations(roadLocations);
         }
+        List<Node> nodesToClear = new List<Node>();
+        foreach (Location l in generatedLocations)
+        {
+            if (l.coveredNodes != null)
+            {
+                foreach (Node n in l.coveredNodes)
+                {
+                    nodesToClear.Add(n);
+                }
+            }
+            
+        }
+        foreach (Location l in roadLocations)
+        {
+            if (l.coveredNodes != null)
+            {
+                foreach (Node n in l.coveredNodes)
+                {
+                    nodesToClear.Add(n);
+                }
+            }
+        }
         generatedLocations.Clear();
         roadLocations.Clear();
+        foreach (Node n in nodesToClear)
+        {
+            Vector2Int nodeIndex = _gridManager.GetNodeIndex(n);
+            visited[nodeIndex.x, nodeIndex.y] = false;
+        }
     }
 }
 

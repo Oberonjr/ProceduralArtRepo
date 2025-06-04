@@ -18,7 +18,10 @@ public class GridManagerEditor : Editor
         {
             gridManager.GenerateGrid();
         }
-
+        if (GUILayout.Button("Reset Grid"))
+        {
+            gridManager.ResetGrid();
+        }
         if (GUILayout.Button("Snap all zones to grid"))
         {
             gridManager.SnapAllToGrid();
