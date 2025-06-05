@@ -108,7 +108,7 @@ public class C17_SimpleBuilding : C17_Building
     }
     #endregion
     private int cachedWidth, cachedDepth, cachedHeight, cachedFacadeIndex, cachedDoorFacade;
-    private C17_FacadeParameters cachedParam;
+    protected C17_FacadeParameters cachedParam;
     
     void BuildFirstFacade(int pWidth, int pDepth, int pHeight, int pFacadeIndex)
     {

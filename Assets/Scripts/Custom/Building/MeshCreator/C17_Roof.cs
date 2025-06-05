@@ -31,9 +31,9 @@ public class C17_Roof : Shape
         {
             builder = new MeshBuilder();
         }
-        Vector3 offset = new Vector3(-Width / 2f, -0.5f, 0);
         if (IsEdge)
         {
+            Vector3 offset = new Vector3(-Width / 2f, -0.5f, 0);
             for (int i = 0; i < Width; i++)
             {
                 if (i == 0)
@@ -64,12 +64,11 @@ public class C17_Roof : Shape
         }
         else
         {
-            Vector3 cOffset = new Vector3(0, 0, 0);
             
-            int v1 = builder.AddVertex(cOffset + new Vector3(1,0,1), Vector2.zero);
-            int v2 = builder.AddVertex(cOffset + new Vector3(Width - 1,0,1), new Vector2(1,0));
-            int v3 = builder.AddVertex(cOffset + new Vector3(Width - 1,0,Depth - 1), new Vector2(1,1));
-            int v4 = builder.AddVertex(cOffset + new Vector3(1,0, Depth - 1), new Vector2(0,1));
+            int v1 = builder.AddVertex(new Vector3(1,0,1), Vector2.zero);
+            int v2 = builder.AddVertex(new Vector3(Width - 1,0,1), new Vector2(1,0));
+            int v3 = builder.AddVertex(new Vector3(Width - 1,0,Depth - 1), new Vector2(1,1));
+            int v4 = builder.AddVertex(new Vector3(1,0, Depth - 1), new Vector2(0,1));
             builder.AddTriangle (v3, v2, v4);
             builder.AddTriangle (v2, v1, v4);
         }
