@@ -409,13 +409,17 @@ public class AreaManager : MonoBehaviour
         preplacedLocations.Clear();
         generatedLocations.Clear();
         roadLocations.Clear();
-        for (int i = 0; i < visited.GetLength(0); i++)
+        if (visited != null)
         {
-            for (int j = 0; j < visited.GetLength(1); j++)
+            for (int i = 0; i < visited.GetLength(0); i++)
             {
-                visited[i, j] = false;
+                for (int j = 0; j < visited.GetLength(1); j++)
+                {
+                    visited[i, j] = false;
+                }
             }
         }
+        
     }
     
     public void ClearAllGeneratedAreas()
