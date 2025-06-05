@@ -16,14 +16,7 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
         int numCurves = Random.Range(3, 13);
         
         Material baseMaterial = new Material(Shader.Find("Standard"));
-        foreach (Floor fl in cachedParam.wallStyle)
-        {
-            if (fl.FloorType == FloorType.PlainFloor)
-            {
-                baseMaterial = fl.WallStyle[0].GetComponent<MeshRenderer>().sharedMaterial;
-                break;
-            }
-        }
+        Material windowMaterial = null;
         
         Vector3 spawnPosition = new Vector3();
         switch (cornerIndex)
@@ -49,7 +42,41 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
             lathe.transform.parent = transform;
             C17_Lathe latheComp = lathe.AddComponent<C17_Lathe>();
             
-            latheComp.Initialize(numCurves, baseMaterial);
+            
+            bool hasWindow = false;
+            if (i == 0)
+            {
+                foreach (Floor fl in cachedParam.wallStyle)
+                {
+                    if (fl.FloorType == FloorType.GroundFloor)
+                    {
+                        baseMaterial = fl.WallStyle[1].GetComponent<MeshRenderer>()
+                            .sharedMaterial;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                int floorIndex = buildingPattern[i - 1];
+                Floor floor = cachedParam.wallStyle[floorIndex];
+                switch (floor.FloorType)
+                {
+                    case FloorType.WindowFloor:
+                        baseMaterial = cachedParam.wallStyle[floorIndex].WallStyle[0].GetComponent<MeshRenderer>()
+                            .sharedMaterial;
+                        GameObject roofObj = cachedParam.wallStyle[floorIndex].WallStyle[0].transform.GetChild(0).gameObject;
+                        windowMaterial= roofObj.GetComponent<MeshRenderer>().sharedMaterial;
+                        hasWindow = true;
+                        break;
+                    default:
+                        baseMaterial = cachedParam.wallStyle[floorIndex].WallStyle[0].GetComponent<MeshRenderer>()
+                            .sharedMaterial;
+                        break;
+                    
+                }
+            }
+            latheComp.Initialize(numCurves, baseMaterial, false, hasWindow, windowMaterial);
             Curve curve = lathe.GetComponent<Curve>();
             curve.points = new List<Vector3>();
             curve.points.Add(new Vector3(1, 0, 0));

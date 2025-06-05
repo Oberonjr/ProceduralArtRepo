@@ -74,7 +74,8 @@ public class C17_SimpleBuilding : C17_Building
     }
     #endregion
     
-    private List<int> buildingPattern;
+    [SerializeField]
+    protected List<int> buildingPattern;
     private int facadeIndex;
     private bool slanted;
     

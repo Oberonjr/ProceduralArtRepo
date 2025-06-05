@@ -9,6 +9,10 @@ public class C17_Quad : Shape
 
     [HideInInspector]public MeshBuilder builder = null;
 
+    private MeshFilter mf = null;
+    private MeshRenderer mr = null;
+    
+    
     public void Initialize(Material pMaterial, Vector3[] pVertexPoints)
     {
         if (pVertexPoints.Length != 4)
@@ -19,13 +23,13 @@ public class C17_Quad : Shape
         material = pMaterial;
         vertexPoints = pVertexPoints;
         
-        MeshFilter mf = GetComponent<MeshFilter>();
+        mf = GetComponent<MeshFilter>();
         GameObject primitveQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        Mesh quadMesh = primitveQuad.GetComponent<MeshFilter>().mesh;
+        Mesh quadMesh = primitveQuad.GetComponent<MeshFilter>().sharedMesh;
         mf.sharedMesh = quadMesh;
         DestroyImmediate(primitveQuad);
         
-        MeshRenderer mr = GetComponent<MeshRenderer>();
+        mr = GetComponent<MeshRenderer>();
         mr.material = material;
     }
 

@@ -102,11 +102,14 @@ public class C17_Lathe : MeshCreator {
 					w1 += normal * outwardOffset;
 					w2 += normal * outwardOffset;
 					w3 += normal * outwardOffset;
-					Vector3[] vert = { w0, w1, w2, w3 };
+					Vector3[] vert = { w1, w2, w3, w0 };
 					
-					C17_Quad window = new C17_Quad();
-					window.Initialize(windowMaterial, vert);
-					window.Build();
+					GameObject window = new GameObject("Window" + curveIndex);
+					window.transform.SetParent(transform);
+					window.transform.localPosition = Vector3.zero;
+					C17_Quad windowQuad = window.AddComponent<C17_Quad>();
+					windowQuad.Initialize(windowMaterial, vert);
+					windowQuad.Build();
 					
 				}
 			}
