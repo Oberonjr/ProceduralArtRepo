@@ -11,20 +11,35 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
     public Vector2Int numCurveRange = new Vector2Int(4, 12);
 
     [Header("Rounded Corner Roof Parameters")]
-    public Vector2 roofHeightRange = new Vector2(0, 2);
+    public Vector2 roofHeightRange = new Vector2(1, 2);
     #endregion
     protected override void Execute()
     {
         Build();
-        AddRoundedCorner();
     }
 
+    public override void Build()
+    {
+        base.Build();
+    }
+
+    protected override void BuildRemainingFacades()
+    {
+        base.BuildRemainingFacades();
+        AddRoundedCorner();
+    }
+    
     void AddRoundedCorner()
     {
         int cornerIndex = Random.Range(0, 4);
         if (RandomizeCurveNumbers)
         {
             numCurves = Random.Range(numCurveRange.x, numCurveRange.y);
+        }
+
+        if (numCurves % 2 == 1)
+        {
+            numCurves++;
         }
         Material baseMaterial = new Material(Shader.Find("Standard"));
         Material windowMaterial = null;
@@ -34,24 +49,24 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
         switch (cornerIndex)
         {
             case 0:
-                spawnPosition = transform.position + new Vector3(-Width / 2f, -Height/2f -1, -Depth / 2f);
+                spawnPosition = transform.position + new Vector3(-Width / 2f, -1, -Depth / 2f);
                 break;
             case 1:
-                spawnPosition = transform.position + new Vector3(Width / 2f, -Height/2f -1, -Depth / 2f);
+                spawnPosition = transform.position + new Vector3(Width / 2f, -1, -Depth / 2f);
                 break;
             case 2:
-                spawnPosition = transform.position + new Vector3(Width / 2f, -Height/2f -1, Depth / 2f);
+                spawnPosition = transform.position + new Vector3(Width / 2f, -1, Depth / 2f);
                 break;
             case 3:
-                spawnPosition = transform.position + new Vector3(-Width / 2f, -Height/2f -1, Depth / 2f);
+                spawnPosition = transform.position + new Vector3(-Width / 2f, -1, Depth / 2f);
                 break;
         }
 
         for (int i = 0; i < Height - 1; i++)
         {
             GameObject lathe = new GameObject("Lathe" + i);
-            lathe.transform.position = spawnPosition + new Vector3(0, transform.position.y + i, 0);
             lathe.transform.parent = transform;
+            lathe.transform.position = spawnPosition + new Vector3(0, transform.position.y + i, 0);
             C17_Lathe latheComp = lathe.AddComponent<C17_Lathe>();
             
             

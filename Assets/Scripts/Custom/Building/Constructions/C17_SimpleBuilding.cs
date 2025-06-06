@@ -8,7 +8,10 @@ using Random = UnityEngine.Random;
 public class C17_SimpleBuilding : C17_Building
 {
     #region GenerationParameters
+
     [Header("Building Generation Parameters")]
+    public bool randomRoofType;
+    public bool slanted;
     [SerializeField] private List<C17_Facade> facades;
     [SerializeField, Range(3,30)] private int width;
     [SerializeField, Range(3,30)] private int depth;
@@ -80,7 +83,7 @@ public class C17_SimpleBuilding : C17_Building
     //[SerializeField]
     protected List<int> buildingPattern;
     private int facadeIndex;
-    private bool slanted;
+
     
     //REMINDER FOR SELF: DO NOT USE START OR AWAKE. YOU WANT TO BE DOING THINGS IN EDITOR. THAT STUFF DON'T WORK THERE
     //heresy
@@ -104,10 +107,9 @@ public class C17_SimpleBuilding : C17_Building
     {
         Build(pWidth, pDepth, pHeight, facadeIndex);
     }
-    public void Build()
+    public virtual void Build()
     {
         facadeIndex = Random.Range(0, facades.Count);
-        //EventBus<FinishBuildingFacade>.OnEvent += PopulateBuildingPattern;
         Build(width, depth, height, facadeIndex);
     }
     #endregion
@@ -153,7 +155,11 @@ public class C17_SimpleBuilding : C17_Building
         int facadeWidth = cachedWidth;
         
         cachedParam = facadeInstance.GetComponent<C17_FacadeParameters>();
-        slanted = cachedParam.slantedRoof;
+        if (randomRoofType)
+        {
+            slanted = Random.value < 0.5f;
+        }
+        cachedParam.slantedRoof = slanted;
         facadeInstance.Initialize(cachedHeight, facadeWidth);
         facadeInstance.DoorHaver = isDoorSide;
         facadeInstance.transform.localPosition = new Vector3(0, 0, cachedDepth / 2f);
@@ -162,7 +168,7 @@ public class C17_SimpleBuilding : C17_Building
         facadeInstance.Build();
     }
 
-    void BuildRemainingFacades()
+    protected virtual void BuildRemainingFacades()
     {
         for (int i = 1; i < 4; i++)
         {
@@ -171,10 +177,10 @@ public class C17_SimpleBuilding : C17_Building
             
             bool isDoorSide = (i == cachedDoorFacade);
             int facadeWidth = (i % 2 == 0) ? cachedWidth : cachedDepth;
-            
+
+            facadeInstance.GetComponent<C17_FacadeParameters>().slantedRoof = slanted;
             facadeInstance.Initialize(cachedHeight, facadeWidth, true, true, buildingPattern);
             facadeInstance.DoorHaver = isDoorSide;
-            
             Vector3 positionOffset = Vector3.zero;
             Vector3 rotation = Vector3.zero;
 

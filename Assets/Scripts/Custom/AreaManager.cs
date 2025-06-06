@@ -185,7 +185,7 @@ public class AreaManager : MonoBehaviour
         {
         }
         visited = new bool[gridSize.x, gridSize.y];
-        
+        float gridRadius = Mathf.Abs((_gridManager.grid[0,0].position - _gridManager.grid[(int)(gridSize.x / 2f),(int)(gridSize.y / 2f)].position).magnitude);
         HandlePreplacedLocations();
         for (int x = 0; x < gridSize.x; x++)
         {
@@ -218,9 +218,18 @@ public class AreaManager : MonoBehaviour
                 }
                 Vector3 center = _gridManager.GetNodeWorldPosition(_gridManager.grid[x,y]) +
                                  new Vector3(areaSize.x * nodeSize, 0, areaSize.y * nodeSize) * 0.5f;
-                
+                float centerToGridCenterDistance = Mathf.Abs((center -_gridManager.GetNodeWorldPosition( _gridManager.grid[(int)(gridSize.x / 2f),(int)(gridSize.y / 2f)])).magnitude);
                 Location loc = new Location();
-                loc.Initialize(AreaType.StandardBlock, 
+                AreaType locType;
+                if (centerToGridCenterDistance >= gridRadius / 2f)
+                {
+                    locType = AreaType.TallBlock;
+                }
+                else
+                {
+                    locType = AreaType.StandardBlock;
+                }
+                loc.Initialize(locType, 
                     center, 
                     new Vector3(areaSize.x * nodeSize, 0, areaSize.y * nodeSize));
                 generatedLocations.Add(loc);

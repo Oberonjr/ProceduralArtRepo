@@ -7,10 +7,11 @@ public class GenerationManager : MonoBehaviour
     private static GenerationManager _instance;
     public static GenerationManager Instance => _instance;
 
-    [SerializeField] private C17_SimpleBuilding buildingPrefab;
+    [SerializeField] private List<C17_SimpleBuilding> buildings;
     [SerializeField] private WarpMeshAlongSpline roadPrefab;
     [SerializeField] private int maxBuildHeight;
     
+    private C17_SimpleBuilding buildingPrefab;
     AreaManager areaManager;
     GridManager gridManager;
     void Awake()
@@ -83,6 +84,7 @@ public class GenerationManager : MonoBehaviour
 
     public void GenerateArea(Location loc)
     {
+        buildingPrefab = buildings[Random.Range(0, buildings.Count)];
         switch (loc.locationType)
         {
             case AreaType.Road:
@@ -104,12 +106,32 @@ public class GenerationManager : MonoBehaviour
                 break;
             case AreaType.Park:
                 break;
+            case AreaType.TallBlock:
+                while (buildingPrefab is C17_RoundedCornerBuilding)
+                {
+                    buildingPrefab = buildings[Random.Range(0, buildings.Count)];
+                }
+                var tallBuilding = Instantiate(buildingPrefab, areaManager.transform);
+                tallBuilding.transform.position = loc.position + new Vector3(0, 0.5f, 0);
+                tallBuilding.Width = (int)loc.size.x;
+                tallBuilding.Depth = (int)loc.size.z;
+                tallBuilding.Height = Random.Range((int)(maxBuildHeight/2f), maxBuildHeight);
+                tallBuilding.randomRoofType = false;
+                tallBuilding.slanted = false;
+                tallBuilding.Build();
+                tallBuilding.transform.name = loc.Name;
+                break;
             default:
-                C17_SimpleBuilding building = Instantiate(buildingPrefab, areaManager.transform);
+                int cornerOffset = 0;
+                if (buildingPrefab is C17_RoundedCornerBuilding)
+                {
+                    cornerOffset = 1;
+                }
+                var building = Instantiate(buildingPrefab, areaManager.transform);
                 building.transform.position = loc.position + new Vector3(0, 0.5f, 0);
-                building.Width = (int)loc.size.x;//- (int)loc.roadSize / 2;
-                building.Depth = (int)loc.size.z;//- (int)loc.roadSize / 2;
-                building.Height = Random.Range(4, maxBuildHeight);
+                building.Width = (int)loc.size.x - cornerOffset;
+                building.Depth = (int)loc.size.z - cornerOffset;
+                building.Height = Random.Range(4, (int)(maxBuildHeight/2f));
                 building.Build();
                 building.transform.name = loc.Name;
                 break;
