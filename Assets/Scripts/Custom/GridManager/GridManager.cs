@@ -303,6 +303,10 @@ public class GridManager : MonoBehaviour
         foreach (Node n in loc.coveredNodes)
         {
             Vector2Int nodeIndex = GetNodeIndex(n);
+            if (nodeIndex.x >= occupied.GetLength(0) || nodeIndex.y >= occupied.GetLength(1))
+            {
+                return;
+            }
             occupied[nodeIndex.x, nodeIndex.y] = false;
             grid[nodeIndex.x, nodeIndex.y].occupied = false;
         }
