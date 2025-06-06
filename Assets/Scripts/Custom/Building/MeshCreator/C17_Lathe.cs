@@ -11,22 +11,44 @@ public class C17_Lathe : MeshCreator {
 
 	public int NumCurves = 10; //number of segments around the mesh
 	public bool ModifySharedMesh = false;
+
+	public float RoofHeight
+	{
+		get
+		{
+			return roofHeight;
+		}
+		set
+		{
+			if (value < 0)
+			{
+				roofHeight = 0;
+			}
+			else
+			{
+				roofHeight = value;
+			}
+		}
+	}
 	
 	private Material baseMaterial;
 	private Material windowMaterial;
+	private Material roofMaterial;
 	private bool hasWindow = false;
 	private bool isRoof = false;
+	private float roofHeight;
 
 	//helper function to map the x,y location of a vertex to an index in a 1D array
 	private int getIndex(int x, int y, int height) {
 		return y + x * height;
 	}
 
-	public void Initialize(int pNumCurves, Material pBaseMaterial, bool pIsRoof = false, bool pHasWindow = false, Material pWindowMaterial = null)
+	public void Initialize(int pNumCurves, Material pBaseMaterial, bool pIsRoof = false, Material pRoofMaterial = null, bool pHasWindow = false, Material pWindowMaterial = null)
 	{
 		NumCurves = pNumCurves;
 		baseMaterial = pBaseMaterial;
 		isRoof = pIsRoof;
+		roofMaterial = pRoofMaterial;
 		hasWindow = pHasWindow;
 		windowMaterial = pWindowMaterial;
 		
@@ -65,6 +87,7 @@ public class C17_Lathe : MeshCreator {
 			}
 		}
 
+		List<Vector2Int> roofIndices = new List<Vector2Int>();
 		//Generate quads:
 		for (int curveIndex = 1; curveIndex<=curveCount; curveIndex++) { //start at 1, because we need to access spline at splineIndex-1
 			for (int vertexIndex = 1; vertexIndex<vertexCount; vertexIndex++) { //start at 1, because we need to access vertex at vertexIndex-1
@@ -79,6 +102,11 @@ public class C17_Lathe : MeshCreator {
 				meshBuilder.AddTriangle(v0, v1, v2);
 				meshBuilder.AddTriangle(v0, v2, v3);
 
+				if (isRoof)
+				{
+					roofIndices.Add(new Vector2Int(v2, v3));
+				}
+				
 				if (hasWindow)
 				{
 					Vector3 p0 = meshBuilder.GetVertex(v0);
@@ -115,6 +143,25 @@ public class C17_Lathe : MeshCreator {
 			}
 		}
 
+		if (isRoof)
+		{
+			int roofIndex = 0; 
+			foreach (Vector2Int roofSlab in roofIndices)
+			{
+				GameObject roof = new GameObject("Roof" + roofIndex);
+				roof.transform.SetParent(transform);
+				roof.transform.localPosition = Vector3.zero;
+				int v0 = meshBuilder.AddVertex(new Vector3(0, roofHeight, 0));
+				Vector3 p0 = meshBuilder.GetVertex(v0);
+				Vector3 p1 = meshBuilder.GetVertex(roofSlab.x);
+				Vector3 p2 = meshBuilder.GetVertex(roofSlab.y);
+				Vector3[] verts = { p2, p1, p0, p0 };
+				C17_Quad roofQuad = roof.AddComponent<C17_Quad>();
+				roofQuad.Initialize(roofMaterial, verts);
+				roofQuad.Build();
+			}
+		}
+		
 		// Generate mesh and apply it to the meshfilter component:
 		ReplaceMesh(meshBuilder.CreateMesh(), ModifySharedMesh);
 	}

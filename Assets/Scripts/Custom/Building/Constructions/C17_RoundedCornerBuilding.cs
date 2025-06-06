@@ -3,7 +3,16 @@ using UnityEngine;
 
 public class C17_RoundedCornerBuilding : C17_SimpleBuilding
 {
+    #region Rounded Corner Parameters
+    [Header("Rounded Corner Parameters")]
+    [Range(4,12)]
+    public int numCurves = 4;
+    public bool RandomizeCurveNumbers;
+    public Vector2Int numCurveRange = new Vector2Int(4, 12);
 
+    [Header("Rounded Corner Roof Parameters")]
+    public Vector2 roofHeightRange = new Vector2(0, 2);
+    #endregion
     protected override void Execute()
     {
         Build();
@@ -13,10 +22,13 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
     void AddRoundedCorner()
     {
         int cornerIndex = Random.Range(0, 4);
-        int numCurves = Random.Range(3, 13);
-        
+        if (RandomizeCurveNumbers)
+        {
+            numCurves = Random.Range(numCurveRange.x, numCurveRange.y);
+        }
         Material baseMaterial = new Material(Shader.Find("Standard"));
         Material windowMaterial = null;
+        Material roofMaterial = null;
         
         Vector3 spawnPosition = new Vector3();
         switch (cornerIndex)
@@ -44,6 +56,20 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
             
             
             bool hasWindow = false;
+            bool isRoof = false;
+            if (i == Height - 2)
+            {
+                isRoof = true;
+                foreach (Floor fl in cachedParam.wallStyle)
+                {
+                    if (fl.FloorType == FloorType.Roof)
+                    {
+                        roofMaterial = fl.WallStyle[0].GetComponent<MeshRenderer>()
+                            .sharedMaterial;
+                        break;
+                    }
+                }
+            }
             if (i == 0)
             {
                 foreach (Floor fl in cachedParam.wallStyle)
@@ -69,6 +95,19 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
                         windowMaterial= roofObj.GetComponent<MeshRenderer>().sharedMaterial;
                         hasWindow = true;
                         break;
+                    case FloorType.GlassFloor:
+                        foreach (Floor fl in cachedParam.wallStyle)
+                        {
+                            if (fl.FloorType == FloorType.GroundFloor)
+                            {
+                                baseMaterial = fl.WallStyle[1].GetComponent<MeshRenderer>()
+                                    .sharedMaterial;
+                                break;
+                            }
+                        }
+                        windowMaterial = cachedParam.wallStyle[floorIndex].WallStyle[0].GetComponent<MeshRenderer>()
+                            .sharedMaterial;
+                        break;
                     default:
                         baseMaterial = cachedParam.wallStyle[floorIndex].WallStyle[0].GetComponent<MeshRenderer>()
                             .sharedMaterial;
@@ -76,14 +115,16 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
                     
                 }
             }
-            latheComp.Initialize(numCurves, baseMaterial, false, hasWindow, windowMaterial);
+            float rH = Random.Range(roofHeightRange.x, roofHeightRange.y + 1);
+            latheComp.RoofHeight = rH;
+            latheComp.Initialize(numCurves, baseMaterial, isRoof, roofMaterial, hasWindow, windowMaterial);
             Curve curve = lathe.GetComponent<Curve>();
             curve.points = new List<Vector3>();
             curve.points.Add(new Vector3(1, 0, 0));
             curve.points.Add(new Vector3(1, 1, 0));
             curve.Apply();
-            lathe.GetComponent<AutoUv>().UpdateUvs();
             latheComp.RecalculateMesh();
+            lathe.GetComponent<AutoUv>().UpdateUvs();
         }
     }
 }

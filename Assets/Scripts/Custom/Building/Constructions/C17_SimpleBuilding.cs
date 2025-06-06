@@ -7,11 +7,14 @@ using Random = UnityEngine.Random;
 
 public class C17_SimpleBuilding : C17_Building
 {
+    #region GenerationParameters
+    [Header("Building Generation Parameters")]
     [SerializeField] private List<C17_Facade> facades;
     [SerializeField, Range(3,30)] private int width;
     [SerializeField, Range(3,30)] private int depth;
     [SerializeField, Range(3,30)] private int height;
-
+    #endregion
+    
     #region Getters and Setters
     public int Width
     {
@@ -74,7 +77,7 @@ public class C17_SimpleBuilding : C17_Building
     }
     #endregion
     
-    [SerializeField]
+    //[SerializeField]
     protected List<int> buildingPattern;
     private int facadeIndex;
     private bool slanted;

@@ -183,8 +183,8 @@ public class AreaManager : MonoBehaviour
         int nodeSize = _gridManager.nodeSize;
         if (visited == null)
         {
-            visited = new bool[gridSize.x, gridSize.y];
         }
+        visited = new bool[gridSize.x, gridSize.y];
         
         HandlePreplacedLocations();
         for (int x = 0; x < gridSize.x; x++)
