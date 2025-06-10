@@ -67,6 +67,7 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
             GameObject lathe = new GameObject("Lathe" + i);
             lathe.transform.parent = transform;
             lathe.transform.position = spawnPosition + new Vector3(0, transform.position.y + i, 0);
+            lathe.gameObject.isStatic = true;
             C17_Lathe latheComp = lathe.AddComponent<C17_Lathe>();
             
             

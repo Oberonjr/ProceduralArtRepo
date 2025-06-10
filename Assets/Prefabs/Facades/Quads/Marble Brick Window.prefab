@@ -11,14 +11,12 @@ GameObject:
   - component: {fileID: 5363942074635811665}
   - component: {fileID: 2160035320835330330}
   - component: {fileID: 6806733777618674210}
-  - component: {fileID: 5571975229625503298}
-  - component: {fileID: 5621598990072633775}
   m_Layer: 0
   m_Name: Marble Brick Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5363942074635811665
 Transform:
@@ -89,58 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5571975229625503298
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3971340859717223806}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &5621598990072633775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3971340859717223806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1855701fa8f61a542abaa9969642105a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SubstanceGraph: {fileID: 11400000, guid: d15a96db1d83ed240b1694d9543c2905, type: 2}
-  outerFrameSize: {x: 0.9, y: 0.9}
-  windowAmount: 4
-  underWindow: 0
-  underWindowHeight: 0
-  grainIntensity: 0.374
-  frameRoughness: 0.293
-  frameMetallic: 0.357
-  deteriorationEdge: 0.291
-  deteriorationRefraction: 4.9
-  colorHue: 0.261
-  colorSaturation: 0.187
-  colorLightness: 0.274
-  glassRoughness: 0.196
-  glassMetallic: 0.228
-  brokenPanels: 0.267
-  shatterDepth: 0.357
-  shatterIntensity: 0.248
 --- !u!1001 &438335941486979102
 PrefabInstance:
   m_ObjectHideFlags: 0

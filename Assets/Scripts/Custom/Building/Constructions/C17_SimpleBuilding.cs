@@ -229,6 +229,7 @@ public class C17_SimpleBuilding : C17_Building
                 C17_Roof ceilingTile = CreateSymbol<C17_Roof>("CeilingTile " + index, Vector3.zero, Quaternion.identity, gameObject.transform);
                 ceilingTile.Initialize(1, roofObj, false, 1); // 1x1 tile
                 ceilingTile.transform.localPosition = new Vector3(x + coverSize/2, cachedHeight, z + coverSize/2) + cOffset;
+                ceilingTile.gameObject.isStatic = true;
                 ceilingTile.Build();
                 index++;
             }

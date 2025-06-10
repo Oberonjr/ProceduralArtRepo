@@ -135,6 +135,7 @@ public class C17_Lathe : MeshCreator {
 					GameObject window = new GameObject("Window" + curveIndex);
 					window.transform.SetParent(transform);
 					window.transform.localPosition = Vector3.zero;
+					window.gameObject.isStatic = true;
 					C17_Quad windowQuad = window.AddComponent<C17_Quad>();
 					windowQuad.Initialize(windowMaterial, vert);
 					windowQuad.Build();
@@ -151,6 +152,7 @@ public class C17_Lathe : MeshCreator {
 				GameObject roof = new GameObject("Roof" + roofIndex);
 				roof.transform.SetParent(transform);
 				roof.transform.localPosition = Vector3.zero;
+				roof.gameObject.isStatic = true;
 				int v0 = meshBuilder.AddVertex(new Vector3(0, roofHeight, 0));
 				Vector3 p0 = meshBuilder.GetVertex(v0);
 				Vector3 p1 = meshBuilder.GetVertex(roofSlab.x);
