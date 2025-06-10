@@ -12,6 +12,7 @@ public class C17_SimpleBuilding : C17_Building
     [Header("Building Generation Parameters")]
     public bool randomRoofType;
     public bool slanted;
+    public bool CombineMeshes = true;
     [SerializeField] private List<C17_Facade> facades;
     [SerializeField, Range(3,30)] private int width;
     [SerializeField, Range(3,30)] private int depth;
@@ -166,6 +167,10 @@ public class C17_SimpleBuilding : C17_Building
         facadeInstance.transform.localEulerAngles = new Vector3(0, 180, 0);
         facadeInstance.transform.name = "BuildingFacade0";
         facadeInstance.Build();
+        if (CombineMeshes)
+        {
+            cachedParam.CombineMeshes();
+        }
     }
 
     protected virtual void BuildRemainingFacades()
@@ -178,7 +183,8 @@ public class C17_SimpleBuilding : C17_Building
             bool isDoorSide = (i == cachedDoorFacade);
             int facadeWidth = (i % 2 == 0) ? cachedWidth : cachedDepth;
 
-            facadeInstance.GetComponent<C17_FacadeParameters>().slantedRoof = slanted;
+            C17_FacadeParameters parameters = facadeInstance.GetComponent<C17_FacadeParameters>();
+            parameters.slantedRoof = slanted;
             facadeInstance.Initialize(cachedHeight, facadeWidth, true, true, buildingPattern);
             facadeInstance.DoorHaver = isDoorSide;
             Vector3 positionOffset = Vector3.zero;
@@ -204,6 +210,10 @@ public class C17_SimpleBuilding : C17_Building
             facadeInstance.transform.localEulerAngles = rotation;
             facadeInstance.transform.name = "BuildingFacade" + i;
             facadeInstance.Build();
+            if (CombineMeshes)
+            {
+                parameters.CombineMeshes();
+            }
         }
         
         GameObject roofObj = null;
