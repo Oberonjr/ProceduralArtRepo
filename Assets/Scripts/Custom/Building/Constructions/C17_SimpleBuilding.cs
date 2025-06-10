@@ -12,6 +12,7 @@ public class C17_SimpleBuilding : C17_Building
     [Header("Building Generation Parameters")]
     public bool randomRoofType;
     public bool slanted;
+    public bool ToCombineMeshes = true;
     [SerializeField] private List<C17_Facade> facades;
     [SerializeField, Range(3,30)] private int width;
     [SerializeField, Range(3,30)] private int depth;
@@ -149,6 +150,10 @@ public class C17_SimpleBuilding : C17_Building
         {
             buildingPattern = pattern;
             BuildRemainingFacades();
+            if (ToCombineMeshes)
+            {
+                CombineMeshes(cachedParam.transform);
+            }
         };
         
         bool isDoorSide = (0 == cachedDoorFacade);
@@ -166,6 +171,7 @@ public class C17_SimpleBuilding : C17_Building
         facadeInstance.transform.localEulerAngles = new Vector3(0, 180, 0);
         facadeInstance.transform.name = "BuildingFacade0";
         facadeInstance.Build();
+        
     }
 
     protected virtual void BuildRemainingFacades()
@@ -178,7 +184,8 @@ public class C17_SimpleBuilding : C17_Building
             bool isDoorSide = (i == cachedDoorFacade);
             int facadeWidth = (i % 2 == 0) ? cachedWidth : cachedDepth;
 
-            facadeInstance.GetComponent<C17_FacadeParameters>().slantedRoof = slanted;
+            C17_FacadeParameters parameters = facadeInstance.GetComponent<C17_FacadeParameters>();
+            parameters.slantedRoof = slanted;
             facadeInstance.Initialize(cachedHeight, facadeWidth, true, true, buildingPattern);
             facadeInstance.DoorHaver = isDoorSide;
             Vector3 positionOffset = Vector3.zero;
@@ -204,6 +211,14 @@ public class C17_SimpleBuilding : C17_Building
             facadeInstance.transform.localEulerAngles = rotation;
             facadeInstance.transform.name = "BuildingFacade" + i;
             facadeInstance.Build();
+            facadeInstance.OnFacadeFinished += (List<int> pattern) =>
+            {
+                if (ToCombineMeshes)
+                {
+                    CombineMeshes(parameters.transform);
+                }
+            };
+
         }
         
         GameObject roofObj = null;
@@ -222,17 +237,97 @@ public class C17_SimpleBuilding : C17_Building
         {
             coverSize = 0;
         }
+        GameObject roof = new GameObject("Roof");
+        roof.transform.SetParent(transform);
+        roof.transform.localPosition = Vector3.zero;
+        roof.transform.localEulerAngles = Vector3.zero;
         for (int x = 0; x < cachedWidth - coverSize; x++)
         {
             for (int z = 0; z < cachedDepth - coverSize; z++)
             {
-                C17_Roof ceilingTile = CreateSymbol<C17_Roof>("CeilingTile " + index, Vector3.zero, Quaternion.identity, gameObject.transform);
+                C17_Roof ceilingTile = CreateSymbol<C17_Roof>("CeilingTile " + index, Vector3.zero, Quaternion.identity, roof.transform);
                 ceilingTile.Initialize(1, roofObj, false, 1); // 1x1 tile
                 ceilingTile.transform.localPosition = new Vector3(x + coverSize/2, cachedHeight, z + coverSize/2) + cOffset;
+                ceilingTile.gameObject.isStatic = true;
                 ceilingTile.Build();
                 index++;
             }
         }
+
+        if (ToCombineMeshes)
+        {
+            CombineMeshes(roof.transform);
+        }
+    }
+    
+    public void CombineMeshes(Transform target)
+    {
+        MeshFilter[] meshFilters = GetMeshesInChildren(target);
+        if(target.gameObject.GetComponent<MeshFilter>() == null)
+            target.gameObject.AddComponent<MeshFilter>();
+        if(target.gameObject.GetComponent<MeshRenderer>() == null)
+            target.gameObject.AddComponent<MeshRenderer>();
         
+        Dictionary<Material, List<CombineInstance>> materialsToCombine = new Dictionary<Material, List<CombineInstance>>();
+        foreach (MeshFilter mf in meshFilters)
+        {
+            MeshRenderer mr = mf.GetComponent<MeshRenderer>();
+            if(mf.sharedMesh == null || mr == null) continue;
+             Material mat = mr.sharedMaterial;
+             if(!materialsToCombine.ContainsKey(mat))
+                 materialsToCombine[mat] = new List<CombineInstance>();
+             
+             CombineInstance ci = new CombineInstance();
+             ci.mesh = mf.sharedMesh;
+             ci.transform = mf.transform.localToWorldMatrix;
+             materialsToCombine[mat].Add(ci);
+
+             mf.gameObject.SetActive(false);
+        }
+        List<Material> materials = new List<Material>();
+        List<CombineInstance> finalCombinations = new List<CombineInstance>();
+        Mesh finalMesh = new Mesh();
+        
+        int subMeshIndex = 0;
+        foreach (var kvp in materialsToCombine)
+        {
+            Mesh subMesh = new Mesh();
+            subMesh.CombineMeshes(kvp.Value.ToArray(), true, true);
+            
+            CombineInstance finalCI = new CombineInstance();
+            finalCI.mesh = subMesh;
+            finalCI.transform = Matrix4x4.identity * target.localToWorldMatrix.inverse;
+            
+            finalCombinations.Add(finalCI);
+            materials.Add(kvp.Key);
+            subMeshIndex++;
+        }
+        
+        finalMesh.CombineMeshes(finalCombinations.ToArray(), false);
+        target.GetComponent<MeshFilter>().sharedMesh = finalMesh;
+        target.GetComponent<MeshRenderer>().sharedMaterials = materials.ToArray();
+        
+        target.gameObject.SetActive(true);
+        for (int i = target.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(target.GetChild(i).gameObject);
+        }
+
+    }
+
+    MeshFilter[] GetMeshesInChildren(Transform parent)
+    {
+        List<MeshFilter> meshFilters = new List<MeshFilter>();
+        if (parent.TryGetComponent<MeshFilter>(out MeshFilter meshFilter))
+        {
+            meshFilters.Add(meshFilter);
+        }
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            MeshFilter[] childFilters = GetMeshesInChildren(parent.GetChild(i));
+            meshFilters.AddRange(childFilters);
+        }
+        return meshFilters.ToArray();
     }
 }

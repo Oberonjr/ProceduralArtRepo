@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1626528104101138892
 Transform:
@@ -47,6 +47,7 @@ MonoBehaviour:
   buildDelay: 0.1
   randomRoofType: 0
   slanted: 1
+  ToCombineMeshes: 1
   facades:
   - {fileID: 5360088445423891032, guid: 05517a3ca12e27b47b96b6e94406a043, type: 3}
   - {fileID: 3312212173233987023, guid: b612b638bc6e0d141ba49afd12c12e92, type: 3}
@@ -55,5 +56,5 @@ MonoBehaviour:
   height: 10
   numCurves: 4
   RandomizeCurveNumbers: 1
-  numCurveRange: {x: 4, y: 12}
+  numCurveRange: {x: 6, y: 12}
   roofHeightRange: {x: 1, y: 2}

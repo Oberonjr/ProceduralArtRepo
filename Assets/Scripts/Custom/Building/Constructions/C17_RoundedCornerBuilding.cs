@@ -44,7 +44,7 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
         Material baseMaterial = new Material(Shader.Find("Standard"));
         Material windowMaterial = null;
         Material roofMaterial = null;
-        
+        GameObject roundedCorner = new GameObject("Rounded Corner");
         Vector3 spawnPosition = new Vector3();
         switch (cornerIndex)
         {
@@ -61,12 +61,15 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
                 spawnPosition = transform.position + new Vector3(-Width / 2f, -1, Depth / 2f);
                 break;
         }
-
+        roundedCorner.transform.SetParent(transform);
+        roundedCorner.transform.position = spawnPosition;
+        roundedCorner.transform.rotation = Quaternion.identity;
         for (int i = 0; i < Height - 1; i++)
         {
             GameObject lathe = new GameObject("Lathe" + i);
-            lathe.transform.parent = transform;
+            lathe.transform.parent = roundedCorner.transform;
             lathe.transform.position = spawnPosition + new Vector3(0, transform.position.y + i, 0);
+            lathe.gameObject.isStatic = true;
             C17_Lathe latheComp = lathe.AddComponent<C17_Lathe>();
             
             
@@ -140,6 +143,11 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
             curve.Apply();
             latheComp.RecalculateMesh();
             lathe.GetComponent<AutoUv>().UpdateUvs();
+        }
+
+        if (ToCombineMeshes)
+        {
+            CombineMeshes(roundedCorner.transform);
         }
     }
 }
