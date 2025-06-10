@@ -12,7 +12,7 @@ public enum AreaType{
     StandardBlock,
     TallBlock,
     Park,
-    TownHall,
+    Citadel,
     Road
 }
 
@@ -253,6 +253,11 @@ public class AreaManager : MonoBehaviour
         foreach (Location loc in preplacedLocations)
         {
             _gridManager.SnapLocToGrid(loc);
+            if (loc.coveredNodes == null)
+            {
+                Debug.LogWarning($"Location {loc.Name} has no covered nodes");
+                continue;
+            }
             foreach (Node n in loc.coveredNodes)
             {
                 Vector2Int globalIndex = _gridManager.GetNodeIndex(n);

@@ -7,9 +7,11 @@ public class GenerationManager : MonoBehaviour
     private static GenerationManager _instance;
     public static GenerationManager Instance => _instance;
 
+    [SerializeField] private int maxBuildHeight;
+    [Header("Objects to spawn")]
     [SerializeField] private List<C17_SimpleBuilding> buildings;
     [SerializeField] private WarpMeshAlongSpline roadPrefab;
-    [SerializeField] private int maxBuildHeight;
+    [SerializeField] private GameObject citadelPrefab;
     
     private C17_SimpleBuilding buildingPrefab;
     AreaManager areaManager;
@@ -120,6 +122,15 @@ public class GenerationManager : MonoBehaviour
                 tallBuilding.slanted = false;
                 tallBuilding.Build();
                 tallBuilding.transform.name = loc.Name;
+                break;
+            case AreaType.Citadel:
+                GameObject citadelInstance = Instantiate(citadelPrefab, areaManager.transform);
+                citadelInstance.transform.position = loc.position + new Vector3(0, 0.5f, 0);
+                citadelInstance.transform.name = loc.Name;
+                if (gridManager != null)
+                {
+                    citadelInstance.transform.localScale *= gridManager.nodeSize;
+                }
                 break;
             default:
                 int cornerOffset = 0;
