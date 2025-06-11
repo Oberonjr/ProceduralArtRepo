@@ -103,6 +103,7 @@ public class AreaManager : MonoBehaviour
     public bool DrawHandles => drawHandles;
     private GUIStyle labelStyle = new GUIStyle();
     // This code is always executed when this object is in the Scene
+    #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(0, 0, 1, 0.4f);
@@ -139,7 +140,7 @@ public class AreaManager : MonoBehaviour
             Debug.DrawLine(Locations[i - 1].position, Locations [i].position, Color.red);
         }
     }
-    
+    #endif
     #endregion
 
     #region Area Generation Parameters
@@ -165,11 +166,6 @@ public class AreaManager : MonoBehaviour
     private void Start()
     {
         _gridManager = GridManager.Instance;
-    }
-
-    private void Update()
-    {
-        DrawDebugLines();
     }
     
     public void GenerateNewAreas()
@@ -480,6 +476,7 @@ public class AreaManager : MonoBehaviour
 
 public class EpicGizmoDrawer
 {
+    #if UNITY_EDITOR
     // Another way to draw Gizmos. With the attribute we control under which circumstances these Gizmos should be drawn
     [DrawGizmo(GizmoType.Selected)]
     private static void IAlsoWantToDrawGizmosFrownyFace(AreaManager script, GizmoType gizmoType)
@@ -492,4 +489,5 @@ public class EpicGizmoDrawer
             }
         }
     }
+    #endif
 }

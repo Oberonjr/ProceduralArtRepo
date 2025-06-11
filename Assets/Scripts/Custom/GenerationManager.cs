@@ -35,7 +35,7 @@ public class GenerationManager : MonoBehaviour
 
     void Start()
     {
-        GenerateEverything();
+        //GenerateEverything();
     }
 
     public void GenerateEverything()
@@ -65,6 +65,11 @@ public class GenerationManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.P))
         {
             GenerateCity();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
     }
     
