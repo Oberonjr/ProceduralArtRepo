@@ -23,7 +23,7 @@ public class C17_FacadeParameters : MonoBehaviour
 {
     public bool slantedRoof;
     public Floor[] wallStyle;
-    public List<int> wallPattern;
+    [HideInInspector]public List<int> wallPattern;
     
     
     [HideInInspector] public bool hasFloor;

@@ -206,11 +206,6 @@ public class C17_SimpleBuilding : C17_Building
                     rotation = new Vector3(0, 90, 0);
                     break;
             }
-
-            facadeInstance.transform.localPosition = positionOffset;
-            facadeInstance.transform.localEulerAngles = rotation;
-            facadeInstance.transform.name = "BuildingFacade" + i;
-            facadeInstance.Build();
             facadeInstance.OnFacadeFinished += (List<int> pattern) =>
             {
                 if (ToCombineMeshes)
@@ -218,6 +213,11 @@ public class C17_SimpleBuilding : C17_Building
                     CombineMeshes(parameters.transform);
                 }
             };
+            facadeInstance.transform.localPosition = positionOffset;
+            facadeInstance.transform.localEulerAngles = rotation;
+            facadeInstance.transform.name = "BuildingFacade" + i;
+            facadeInstance.Build();
+            
 
         }
         
