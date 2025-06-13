@@ -143,6 +143,7 @@ MonoBehaviour:
   CurrentStatePreset: " <sbspreset pkgurl=\"pkg://Glass\" label=\"\" >\n  <presetinput
     identifier=\"$outputsize\" uid=\"2052955985\" type=\"8\" value=\"9,9\" />\n 
     <presetinput identifier=\"$randomseed\" uid=\"758089987\" type=\"4\" value=\"1198\"
+    />\n  <presetinput identifier=\"switch\" uid=\"454551050\" type=\"4\" value=\"0\"
     />\n  <presetinput identifier=\"offset\" uid=\"455493055\" type=\"0\" value=\"0.339\"
     />\n  <presetinput identifier=\"opacitymult\" uid=\"415174132\" type=\"0\" value=\"0.374\"
     />\n  <presetinput identifier=\"height_depth\" uid=\"415105476\" type=\"0\" value=\"0.291\"
@@ -268,7 +269,7 @@ MonoBehaviour:
             input.
           Type: 4
           WidgetType: 4
-        Data: 1
+        Data: 0
         NumericalDescription:
           DefaultValue: 1
           MinValue: 0
