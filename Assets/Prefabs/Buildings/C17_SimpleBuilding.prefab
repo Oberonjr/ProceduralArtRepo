@@ -52,6 +52,7 @@ MonoBehaviour:
   - {fileID: 5360088445423891032, guid: 05517a3ca12e27b47b96b6e94406a043, type: 3}
   - {fileID: 3312212173233987023, guid: b612b638bc6e0d141ba49afd12c12e92, type: 3}
   - {fileID: 6621839907491245069, guid: f905a3d4d29d2f149bb2ce87271723c4, type: 3}
+  - {fileID: 824731848456123022, guid: 64273b872e96e754092687e88a11289e, type: 3}
   width: 10
   depth: 10
   height: 5

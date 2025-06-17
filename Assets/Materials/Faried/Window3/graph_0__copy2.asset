@@ -144,19 +144,19 @@ MonoBehaviour:
     identifier=\"$outputsize\" uid=\"2052955985\" type=\"8\" value=\"10,10\" />\n 
     <presetinput identifier=\"Size_xy\" uid=\"456104182\" type=\"1\" value=\"0.84,1.1\"
     />\n  <presetinput identifier=\"switch\" uid=\"454551050\" type=\"4\" value=\"0\"
-    />\n  <presetinput identifier=\"opacitymult\" uid=\"415174132\" type=\"0\" value=\"0.432\"
+    />\n  <presetinput identifier=\"opacitymult\" uid=\"415174132\" type=\"0\" value=\"0.305\"
     />\n  <presetinput identifier=\"height_depth\" uid=\"415105476\" type=\"0\" value=\"0.229\"
     />\n  <presetinput identifier=\"Intensity\" uid=\"415108587\" type=\"0\" value=\"8.9\"
     />\n  <presetinput identifier=\"hue_1\" uid=\"413608784\" type=\"0\" value=\"0.487\"
-    />\n  <presetinput identifier=\"saturation_1\" uid=\"413608771\" type=\"0\" value=\"0.801\"
-    />\n  <presetinput identifier=\"luminosity_1\" uid=\"413608806\" type=\"0\" value=\"0.732\"
+    />\n  <presetinput identifier=\"saturation_1\" uid=\"413608771\" type=\"0\" value=\"0.305\"
+    />\n  <presetinput identifier=\"luminosity_1\" uid=\"413608806\" type=\"0\" value=\"0.602\"
     />\n  <presetinput identifier=\"Position\" uid=\"414775133\" type=\"0\" value=\"0\"
     />\n  <presetinput identifier=\"hardness\" uid=\"415000106\" type=\"0\" value=\"0\"
     />\n  <presetinput identifier=\"Intensity_1\" uid=\"415026846\" type=\"0\" value=\"0\"
     />\n  <presetinput identifier=\"opacitymult_1\" uid=\"457809403\" type=\"0\"
     value=\"0\" />\n  <presetinput identifier=\"opacitymult_2\" uid=\"457808848\"
     type=\"0\" value=\"0.678\" />\n  <presetinput identifier=\"opacitymult_3\" uid=\"455731364\"
-    type=\"0\" value=\"0.326\" />\n  <presetinput identifier=\"opacitymult_4\" uid=\"455731241\"
+    type=\"0\" value=\"0.508\" />\n  <presetinput identifier=\"opacitymult_4\" uid=\"455731241\"
     type=\"0\" value=\"1\" />\n </sbspreset>\n"
   IsRuntimeOnly: 0
   GenerateAllOutputs: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
             blend
           Type: 0
           WidgetType: 1
-        Data: 0.432
+        Data: 0.305
         NumericalDescription:
           DefaultValue: 0.05
           MinValue: 0
@@ -397,7 +397,7 @@ MonoBehaviour:
             of the input image's color
           Type: 0
           WidgetType: 1
-        Data: 0.801
+        Data: 0.305
         NumericalDescription:
           DefaultValue: 0.37
           MinValue: 0
@@ -418,7 +418,7 @@ MonoBehaviour:
             of the input image
           Type: 0
           WidgetType: 1
-        Data: 0.732
+        Data: 0.602
         NumericalDescription:
           DefaultValue: 0.6
           MinValue: 0
@@ -541,7 +541,7 @@ MonoBehaviour:
             blend
           Type: 0
           WidgetType: 1
-        Data: 0.326
+        Data: 0.508
         NumericalDescription:
           DefaultValue: 0.1
           MinValue: 0

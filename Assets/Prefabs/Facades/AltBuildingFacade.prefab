@@ -78,7 +78,7 @@ MonoBehaviour:
     - {fileID: 6775556239462858242, guid: 1356742a6b6a12f419bddccf7cb24096, type: 3}
   - FloorType: 5
     WallStyle:
-    - {fileID: 662648398147227115, guid: e0cb8d7d99702914dbb11984dee33f88, type: 3}
+    - {fileID: 7327662751748232375, guid: a5300b1c35271584ba5ce73a4b1d0557, type: 3}
   wallPattern: 
   hasFloor: 1
   groundFloor:

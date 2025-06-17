@@ -123,8 +123,9 @@ public class C17_RoundedCornerBuilding : C17_SimpleBuilding
                                 break;
                             }
                         }
-                        windowMaterial = cachedParam.wallStyle[floorIndex].WallStyle[0].GetComponent<MeshRenderer>()
+                        windowMaterial = floor.WallStyle[0].GetComponent<MeshRenderer>()
                             .sharedMaterial;
+                        hasWindow = true;
                         break;
                     default:
                         baseMaterial = cachedParam.wallStyle[floorIndex].WallStyle[0].GetComponent<MeshRenderer>()
