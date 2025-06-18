@@ -12,6 +12,7 @@ public class GenerationManager : MonoBehaviour
     [SerializeField] private List<C17_SimpleBuilding> buildings;
     [SerializeField] private WarpMeshAlongSpline roadPrefab;
     [SerializeField] private GameObject citadelPrefab;
+    [SerializeField] private GameObject monumentPrefab;
     
     private C17_SimpleBuilding buildingPrefab;
     AreaManager areaManager;
